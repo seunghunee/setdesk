@@ -14,6 +14,8 @@ Ubuntu에서의 개인 개발환경을 자동관리하기 위한 프로그램으
 
 ## 소프트웨어 목록
 
+### 기본
+
 | type                   | name               |
 | ---------------------- | ------------------ |
 | OS                     | Ubuntu             |
@@ -21,3 +23,12 @@ Ubuntu에서의 개인 개발환경을 자동관리하기 위한 프로그램으
 | Editor                 | Visual Studio Code |
 | Version Control system | Git                |
 | Web browser            | Google Chrome      |
+
+### 언어 관련
+
+#### JavaScript / TypeScript
+
+| type            | name |
+| --------------- | ---- |
+| Version Manager | nvm  |
+| Package Manager | npm  |

@@ -1,0 +1,64 @@
+---
+- hosts: localhost
+  connection: local
+  become: yes
+  tasks:
+    - name: Add apt repository keys
+      apt_key:
+        url: "{{ item }}"
+      loop:
+        - https://packages.microsoft.com/keys/microsoft.asc
+        - https://dl.google.com/linux/linux_signing_key.pub
+
+    - name: Add apt repositories
+      apt_repository:
+        repo: "{{ item }}"
+      loop:
+        - deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
+        - deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
+
+    - name: Keep all softwares up to date
+      apt:
+        update_cache: yes
+        upgrade: full
+
+    - name: Remove unnecessary programs
+      apt:
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - ubuntu-web-launchers
+        - thunderbird
+        - firefox
+        - gnome-calendar
+        - gnome-todo
+
+    - name: Remove useless packages from the cache
+      apt:
+        autoclean: yes
+
+    - name: Remove dependencies that are no longer required
+      apt:
+        autoremove: yes
+        purge: yes
+
+    - name: Install Visual Studio Code
+      apt:
+        name: code
+
+    - name: Install Git
+      apt:
+        name: git
+
+    - name: Configure Git
+      git_config:
+        scope: global
+        name: "{{ item.name }}"
+        value: "{{ item.value }}"
+      loop:
+        - { name: user.email, value: seunghunee@gmail.com}
+        - { name: user.name, value: Shin Seunghun}
+
+    - name: Install Google Chrome
+      apt:
+        name: google-chrome-stable
