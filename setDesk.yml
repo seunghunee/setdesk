@@ -26,12 +26,14 @@
       apt:
         name: "{{ item }}"
         state: absent
+        purge: yes
       loop:
         - ubuntu-web-launchers
         - thunderbird
         - firefox
         - gnome-calendar
         - gnome-todo
+        - libreoffice*
 
     - name: Remove useless packages from the cache
       apt:
@@ -42,9 +44,31 @@
         autoremove: yes
         purge: yes
 
+    # Desktop environment: GNOME
+    - name: Install python-psutil (python2) # For dconf module
+      apt:
+        name: python-psutil
+
+    - name: Map caps lock to ctrl
+      dconf:
+        key: "/org/gnome/desktop/input-sources/xkb-options"
+        value: "['ctrl:nocaps']"
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
+    - name: Turn on Auto-hide the dock
+      dconf:
+        key: "/org/gnome/shell/extensions/dash-to-dock/dock-fixed"
+        value: "false"
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
     - name: Install Visual Studio Code
       apt:
         name: code
+
+    # TODO: idempotent
+    - name:
+      shell: code --install-extension shan.code-settings-sync
+      become_user: "{{ ansible_env.SUDO_USER }}"
 
     - name: Install Git
       apt:
@@ -56,8 +80,8 @@
         name: "{{ item.name }}"
         value: "{{ item.value }}"
       loop:
-        - { name: user.email, value: seunghunee@gmail.com}
-        - { name: user.name, value: Shin Seunghun}
+        - { name: user.email, value: seunghunee@gmail.com }
+        - { name: user.name, value: Shin Seunghun }
 
     - name: Install Google Chrome
       apt:
