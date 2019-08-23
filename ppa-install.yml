@@ -1,0 +1,13 @@
+- name: Add {{ name }} apt key
+  apt_key:
+    url: "{{ key_url }}"
+  when: key_url is defined
+
+- name: Add {{ name }} apt repository
+  apt_repository:
+    repo: "{{ repo }}"
+
+- name: Install {{ name }}
+  apt:
+    name: "{{ pkg_name }}"
+    update_cache: yes

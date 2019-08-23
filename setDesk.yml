@@ -3,20 +3,8 @@
   connection: local
   become: yes
   tasks:
-    - name: Add apt repository keys
-      apt_key:
-        url: "{{ item }}"
-      loop:
-        - https://packages.microsoft.com/keys/microsoft.asc
-        - https://dl.google.com/linux/linux_signing_key.pub
-
-    - name: Add apt repositories
-      apt_repository:
-        repo: "{{ item }}"
-      loop:
-        - deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
-        - deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
-
+    # OS: Ubuntu
+    ## Package manager: apt
     - name: Keep all softwares up to date
       apt:
         update_cache: yes
@@ -28,12 +16,7 @@
         state: absent
         purge: yes
       loop:
-        - ubuntu-web-launchers
-        - thunderbird
         - firefox
-        - gnome-calendar
-        - gnome-todo
-        - libreoffice*
 
     - name: Remove useless packages from the cache
       apt:
@@ -44,7 +27,7 @@
         autoremove: yes
         purge: yes
 
-    # Desktop environment: GNOME
+    ## Desktop environment: GNOME
     - name: Install python-psutil (python2) # For dconf module
       apt:
         name: python-psutil
@@ -61,15 +44,29 @@
         value: "false"
       become_user: "{{ ansible_env.SUDO_USER }}"
 
-    - name: Install Visual Studio Code
-      apt:
-        name: code
+    - include: ppa-install.yml
+      vars:
+        name: Numix
+        pkg_name: "{{ item }}"
+        repo: ppa:numix/ppa
+      loop:
+        - numix-gtk-theme
+        - numix-icon-theme-circle
 
-    # TODO: idempotent
-    - name:
+    # Editor: Visual Studio Code
+    - include: ppa-install.yml
+      vars:
+        name: Visual Studio Code
+        pkg_name: code
+        repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
+        key_url: https://packages.microsoft.com/keys/microsoft.asc
+
+    ## TODO: idempotent
+    - name: Install vscode sync extension
       shell: code --install-extension shan.code-settings-sync
       become_user: "{{ ansible_env.SUDO_USER }}"
 
+    # Version Control system: Git
     - name: Install Git
       apt:
         name: git
@@ -83,6 +80,18 @@
         - { name: user.email, value: seunghunee@gmail.com }
         - { name: user.name, value: Shin Seunghun }
 
-    - name: Install Google Chrome
-      apt:
-        name: google-chrome-stable
+    # Web browser: Google Chrome
+    - include: ppa-install.yml
+      vars:
+        name: Google Chrome
+        pkg_name: google-chrome-stable
+        repo: deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
+        key_url: https://dl.google.com/linux/linux_signing_key.pub
+
+    # Node
+    - name: nvm
+      shell: >
+        wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+      args:
+        creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+      become_user: "{{ ansible_env.SUDO_USER }}"
