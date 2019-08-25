@@ -1,0 +1,7 @@
+1. sudo apt-get install fcitx-hangul
+2. im-config -n fcitx
+3. reboot
+4. fcitx-configtool
+5. Input Method > + > 
+    Uncheck "Only Show Current Language"
+    Search "Hangul"
