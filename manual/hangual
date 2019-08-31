@@ -5,3 +5,9 @@
 5. Input Method > + > 
     Uncheck "Only Show Current Language"
     Search "Hangul"
+
+$ sudo apt-get install ibus-hangul
+
+$ sudo apt install ibus-mozc
+$ ibus restart
+$ gsettings set org.gnome.desktop.input-sources sources "[('xkb', 'jp'), ('ibus', 'mozc-jp')]"

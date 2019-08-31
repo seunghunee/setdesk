@@ -35,22 +35,6 @@
         purge: yes
 
     ## Desktop environment: GNOME
-    - name: Install python-psutil (python2) # For dconf module
-      apt:
-        name: python-psutil
-
-    - name: Map caps lock to ctrl
-      dconf:
-        key: "/org/gnome/desktop/input-sources/xkb-options"
-        value: "['ctrl:nocaps']"
-      become_user: "{{ ansible_env.SUDO_USER }}"
-
-    - name: Turn on Auto-hide the dock
-      dconf:
-        key: "/org/gnome/shell/extensions/dash-to-dock/dock-fixed"
-        value: "false"
-      become_user: "{{ ansible_env.SUDO_USER }}"
-
     - include: ppa-install.yml
       vars:
         name: Numix
@@ -59,6 +43,46 @@
       loop:
         - numix-gtk-theme
         - numix-icon-theme-circle
+
+    - name: Set a profile for dconf databases
+      copy:
+        src: configs/user
+        dest: /etc/dconf/profile/user
+
+    - name: Create the gnome dconf database directory
+      file:
+        path: /etc/dconf/db/gnome.d
+        state: directory
+
+    - name: Set a gnome dconf config file
+      copy:
+        src: configs/gnome.cfg
+        dest: /etc/dconf/db/gnome.d/gnome.cfg
+      register: gnome
+
+    - name: Update dconf
+      shell: dconf update
+      when: gnome.changed
+
+    - name: Remove personal special folders
+      file:
+        path: ~/{{ item }}
+        state: absent
+      become_user: "{{ ansible_env.SUDO_USER }}"
+      loop:
+        - Documents
+        - Downloads
+        - Music
+        - Pictures
+        - Public
+        - Templates
+        - Videos
+
+    - name: Disable the automatic special folder creation
+      copy:
+        src: configs/user-dirs.conf
+        dest: ~/.config/user-dirs.conf
+      become_user: "{{ ansible_env.SUDO_USER }}"
 
     # Editor: Visual Studio Code
     - include: ppa-install.yml
