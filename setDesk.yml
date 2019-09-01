@@ -35,6 +35,44 @@
         purge: yes
 
     ## Desktop environment: GNOME
+    - name: Install python-psutil (python2) # For dconf module
+      apt:
+        name: python-psutil
+
+    - name: Map caps lock to ctrl
+      dconf:
+        key: "/org/gnome/desktop/input-sources/xkb-options"
+        value: "['ctrl:nocaps']"
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
+    ### Input framework: Ibus
+    - name: Install ibus hangul (Korean)
+      apt:
+        name: ibus-hangul
+      register: ibus_hangul
+
+    - name: Install ibus anthy (Japanese)
+      apt:
+        name: ibus-anthy
+      register: ibus_anthy
+
+    - name: Restart ibus daemon
+      shell: ibus restart
+      when: ibus_hangul.changed or ibus_anthy.changed
+
+    - name: Set input sources
+      dconf:
+        key: "/org/gnome/desktop/input-sources/sources"
+        value: "[('xkb', 'us'), ('ibus', 'hangul'), ('ibus', 'anthy')]"
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
+    - name: Set initial hangul input mode
+      dconf:
+        key: "/desktop/ibus/engine/hangul/initial-input-mode"
+        value: "'hangul'"
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
+    ### Gtk theme: Numix
     - include: ppa-install.yml
       vars:
         name: Numix
@@ -49,21 +87,22 @@
         src: configs/user
         dest: /etc/dconf/profile/user
 
-    - name: Create the gnome dconf database directory
+    - name: Create the numix dconf database directory
       file:
-        path: /etc/dconf/db/gnome.d
+        path: /etc/dconf/db/numix.d
         state: directory
 
-    - name: Set a gnome dconf config file
+    - name: Set a numix dconf config file
       copy:
-        src: configs/gnome.cfg
-        dest: /etc/dconf/db/gnome.d/gnome.cfg
-      register: gnome
+        src: configs/numix.cfg
+        dest: /etc/dconf/db/numix.d/numix.cfg
+      register: numix
 
     - name: Update dconf
       shell: dconf update
-      when: gnome.changed
+      when: numix.changed
 
+    ### Home directory
     - name: Remove personal special folders
       file:
         path: ~/{{ item }}
