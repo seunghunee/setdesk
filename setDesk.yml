@@ -45,6 +45,12 @@
         value: "['ctrl:nocaps']"
       become_user: "{{ ansible_env.SUDO_USER }}"
 
+    - name: No blank screen
+      dconf:
+        key: "/org/gnome/desktop/session/idle-delay"
+        value: uint32 0
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
     ### Input framework: Ibus
     - name: Install ibus hangul (Korean)
       apt:
