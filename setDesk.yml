@@ -131,6 +131,12 @@
         repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
         key_url: https://packages.microsoft.com/keys/microsoft.asc
 
+    - name: Set Visual Studio Code as default editor
+      lineinfile:
+        path: ~/.bashrc
+        line: export EDITOR="code -w"
+        create: yes
+
     - name: Install vscode sync extension
       shell: code --install-extension shan.code-settings-sync
       become_user: "{{ ansible_env.SUDO_USER }}"
