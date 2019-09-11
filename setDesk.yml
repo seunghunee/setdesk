@@ -170,9 +170,20 @@
         key_url: https://dl.google.com/linux/linux_signing_key.pub
 
     # Node
-    - name: nvm
+    - name: Install nvm
       shell: >
         wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
       args:
         creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
+    # Go
+    - name: Install Go
+      apt:
+        name: golang
+
+    - name: Create go workspace directory
+      file:
+        path: ~/go/src/github.com/seunghunee
+        state: directory
       become_user: "{{ ansible_env.SUDO_USER }}"
