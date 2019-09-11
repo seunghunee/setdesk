@@ -178,9 +178,11 @@
       become_user: "{{ ansible_env.SUDO_USER }}"
 
     # Go
-    - name: Install Go
-      apt:
-        name: golang
+    - include: ppa-install.yml
+      vars:
+        name: Go
+        pkg_name: golang-go
+        repo: ppa:longsleep/golang-backports
 
     - name: Create go workspace directory
       file:
