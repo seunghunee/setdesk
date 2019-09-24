@@ -146,8 +146,13 @@
         create: yes
 
     - name: Install vscode sync extension
-      shell: code --install-extension shan.code-settings-sync
+      shell: >
+        code --list-extensions | grep -q Shan.code-settings-sync
+        && echo -n OK
+        || code --install-extension shan.code-settings-sync
       become_user: "{{ ansible_env.SUDO_USER }}"
+      register: result
+      changed_when: result.stdout != 'OK'
 
     # Version Control system: Git
     - name: Install Git

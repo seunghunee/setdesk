@@ -1,2 +1,5 @@
 # Vscode files
 .vscode
+
+# Ansible retry files
+*.retry
