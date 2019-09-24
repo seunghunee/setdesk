@@ -3,6 +3,8 @@
   connection: local
   become: yes
   tasks:
+    #TODO: startup script
+
     # OS: Ubuntu
     ## Linux Kernel
     - name: set inotify watchers's maximum limit
@@ -169,6 +171,11 @@
         repo: deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
         key_url: https://dl.google.com/linux/linux_signing_key.pub
 
+    # Tools
+    - name: Install curl
+      apt:
+        name: curl
+
     # Node
     - name: Install nvm
       shell: >
@@ -189,3 +196,10 @@
         path: ~/go/src/github.com/seunghunee
         state: directory
       become_user: "{{ ansible_env.SUDO_USER }}"
+
+    - name: Add go workspace's bin directory to global PATH
+      lineinfile:
+        path: ~/.bashrc
+        line: export PATH=$PATH:$(go env GOPATH)/bin
+        create: yes
+    #TODO: go bash auto completion
