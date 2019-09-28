@@ -47,6 +47,42 @@
         value: "['ctrl:nocaps']"
       become_user: "{{ ansible_env.SUDO_USER }}"
 
+    - name: Unbind [Ctrl + Alt + Left]
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/switch-to-workspace-left"
+        value: "['']"
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
+    - name: Unbind [Ctrl + Alt + Right]
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/switch-to-workspace-right"
+        value: "['']"
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
+    - name: Unbind [Ctrl + Shift + Alt + up] from move-to-workspace-up
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/move-to-workspace-up"
+        value: "['<Super><Shift>Page_Up']"
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
+    - name: Unbind [Ctrl + Shift + Alt + down] from move-to-workspace-down
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/move-to-workspace-down"
+        value: "['<Super><Shift>Page_Down']"
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
+    - name: Unbind [Alt + Tab] from switch-applications
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/switch-applications"
+        value: "['<Super>Tab']"
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
+    - name: Bind [Alt + Tab] to switch-windows
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/switch-windows"
+        value: "['<Alt>Tab']"
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
     - name: No blank screen
       dconf:
         key: "/org/gnome/desktop/session/idle-delay"
