@@ -41,6 +41,39 @@
       apt:
         name: python-psutil
 
+    - name: No blank screen
+      dconf:
+        key: "/org/gnome/desktop/session/idle-delay"
+        value: uint32 0
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
+    # - name: Remove appliction icons from dock
+    #   dconf:
+    #     key: "/org/gnome/shell/favorite-apps"
+    #     value: "[]"
+
+    ### Home directory
+    - name: Remove personal special folders
+      file:
+        path: ~/{{ item }}
+        state: absent
+      become_user: "{{ ansible_env.SUDO_USER }}"
+      loop:
+        - Documents
+        - Downloads
+        - Music
+        - Pictures
+        - Public
+        - Templates
+        - Videos
+
+    - name: Disable the automatic special folder creation
+      copy:
+        src: configs/user-dirs.conf
+        dest: ~/.config/user-dirs.conf
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
+    ### Key bindings
     - name: Map caps lock to ctrl
       dconf:
         key: "/org/gnome/desktop/input-sources/xkb-options"
@@ -83,10 +116,16 @@
         value: "['<Alt>Tab']"
       become_user: "{{ ansible_env.SUDO_USER }}"
 
-    - name: No blank screen
+    - name: Unbind [Alt + Shift + Tab] from switch-applications-backward
       dconf:
-        key: "/org/gnome/desktop/session/idle-delay"
-        value: uint32 0
+        key: "/org/gnome/desktop/wm/keybindings/switch-applications-backward"
+        value: "['<Shift><Super>Tab']"
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
+    - name: Bind [Alt + Shift + Tab] to switch-windows-backward
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/switch-windows-backward"
+        value: "['<Shift><Alt>Tab']"
       become_user: "{{ ansible_env.SUDO_USER }}"
 
     ### Input framework: Ibus
@@ -145,27 +184,6 @@
     - name: Update dconf
       shell: dconf update
       when: numix.changed
-
-    ### Home directory
-    - name: Remove personal special folders
-      file:
-        path: ~/{{ item }}
-        state: absent
-      become_user: "{{ ansible_env.SUDO_USER }}"
-      loop:
-        - Documents
-        - Downloads
-        - Music
-        - Pictures
-        - Public
-        - Templates
-        - Videos
-
-    - name: Disable the automatic special folder creation
-      copy:
-        src: configs/user-dirs.conf
-        dest: ~/.config/user-dirs.conf
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     # Editor: Visual Studio Code
     - include: ppa-install.yml
