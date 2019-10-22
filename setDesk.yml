@@ -203,6 +203,11 @@
       loop:
         - { name: user.email, value: seunghunee@gmail.com }
         - { name: user.name, value: Shin Seunghun }
+        - { name: diff.tool, value: vscode }
+        - {
+            name: difftool.vscode.cmd,
+            value: code --wait --diff $LOCAL $REMOTE,
+          }
 
     # Web browser: Google Chrome
     - include: ppa-install.yml
