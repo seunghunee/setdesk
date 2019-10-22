@@ -47,10 +47,11 @@
         value: uint32 0
       become_user: "{{ ansible_env.SUDO_USER }}"
 
-    # - name: Remove appliction icons from dock
-    #   dconf:
-    #     key: "/org/gnome/shell/favorite-apps"
-    #     value: "[]"
+    - name: Remove appliction icons from dock
+      dconf:
+        key: "/org/gnome/shell/favorite-apps"
+        value: "['']"
+      become_user: "{{ ansible_env.SUDO_USER }}"
 
     ### Home directory
     - name: Remove personal special folders
