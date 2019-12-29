@@ -47,6 +47,12 @@
         value: uint32 0
       become_user: "{{ ansible_env.SUDO_USER }}"
 
+    - name: Auto-hide the Dock
+      dconf:
+        key: "/org/gnome/shell/extensions/dash-to-dock/dock-fixed"
+        value: "false"
+      become_user: "{{ ansible_env.SUDO_USER }}"
+
     - name: Remove appliction icons from dock
       dconf:
         key: "/org/gnome/shell/favorite-apps"
@@ -157,6 +163,7 @@
       become_user: "{{ ansible_env.SUDO_USER }}"
 
     ### Gtk theme: Numix
+    # TODO: 재부팅 않고 바로 적용되도록 하기
     - include: ppa-install.yml
       vars:
         name: Numix
