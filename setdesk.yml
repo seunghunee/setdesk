@@ -26,6 +26,8 @@
         purge: yes
       loop:
         - firefox
+        - evince
+        - gedit
 
     - name: Remove useless packages from the cache
       apt:
