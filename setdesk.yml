@@ -168,7 +168,7 @@
     # TODO: 재부팅 않고 바로 적용되도록 하기
     - include: ppa-install.yml
       vars:
-        name: Numix
+        name: Numix({{ item }})
         pkg_name: "{{ item }}"
         repo: ppa:numix/ppa
       loop:
