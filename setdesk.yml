@@ -195,6 +195,13 @@
       shell: dconf update
       when: numix.changed
 
+    # Terminal: Bash
+    - name: Disable XON/XOFF for i-search forward
+      lineinfile:
+        path: ~/.bashrc
+        line: stty -ixon
+        create: yes
+
     # Editor: Visual Studio Code
     - include: ppa-install.yml
       vars:
