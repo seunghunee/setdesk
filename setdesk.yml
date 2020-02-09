@@ -195,12 +195,18 @@
       shell: dconf update
       when: numix.changed
 
-    # Terminal: Bash
+    # Terminal: Bash(GNOME Terminal)
     - name: Disable XON/XOFF for i-search forward
       lineinfile:
         path: ~/.bashrc
         line: stty -ixon
         create: yes
+
+    - name: Set GNOME Terminal theme
+      dconf:
+        key: "/org/gnome/terminal/legacy/theme-variant"
+        value: "'dark'"
+      become_user: "{{ ansible_env.SUDO_USER }}"
 
     # Editor: Visual Studio Code
     - include: ppa-install.yml
