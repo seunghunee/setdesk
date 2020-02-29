@@ -165,7 +165,6 @@
       become_user: "{{ ansible_env.SUDO_USER }}"
 
     ### Gtk theme: Numix
-    # TODO: 재부팅 않고 바로 적용되도록 하기
     - include: ppa-install.yml
       vars:
         name: Numix({{ item }})
@@ -175,25 +174,23 @@
         - numix-gtk-theme
         - numix-icon-theme-circle
 
-    - name: Set a profile for dconf databases
-      copy:
-        src: configs/user
-        dest: /etc/dconf/profile/user
+    - name: Set Numix for gtk
+      dconf:
+        key: "/org/gnome/desktop/interface/gtk-theme"
+        value: "'Numix'"
+      become_user: "{{ ansible_env.SUDO_USER }}"
 
-    - name: Create the numix dconf database directory
-      file:
-        path: /etc/dconf/db/numix.d
-        state: directory
+    - name: Set Numix for theme
+      dconf:
+        key: "/org/gnome/desktop/wm/preferences/theme"
+        value: "'Numix'"
+      become_user: "{{ ansible_env.SUDO_USER }}"
 
-    - name: Set a numix dconf config file
-      copy:
-        src: configs/numix.cfg
-        dest: /etc/dconf/db/numix.d/numix.cfg
-      register: numix
-
-    - name: Update dconf
-      shell: dconf update
-      when: numix.changed
+    - name: Set Numix Circle for icon
+      dconf:
+        key: "/org/gnome/desktop/interface/icon-theme"
+        value: "'Numix-Circle'"
+      become_user: "{{ ansible_env.SUDO_USER }}"
 
     # Terminal: Bash(GNOME Terminal)
     - name: Disable XON/XOFF for i-search forward
