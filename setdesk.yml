@@ -275,12 +275,6 @@
         pkg_name: golang-go
         repo: ppa:longsleep/golang-backports
 
-    - name: Create go workspace directory
-      file:
-        path: ~/go/src/github.com/seunghunee
-        state: directory
-      become_user: "{{ ansible_env.SUDO_USER }}"
-
     - name: Add go workspace's bin directory to global PATH
       lineinfile:
         path: ~/.bashrc
