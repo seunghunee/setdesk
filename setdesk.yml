@@ -39,9 +39,9 @@
         purge: yes
 
     ## Desktop environment: GNOME
-    - name: Install python-psutil (python2) # For dconf module
+    - name: Install python3-psutil (python3) # For dconf module
       apt:
-        name: python-psutil
+        name: python3-psutil
 
     - name: No blank screen
       dconf:
@@ -164,46 +164,12 @@
         value: "'hangul'"
       become_user: "{{ ansible_env.SUDO_USER }}"
 
-    ### Gtk theme: Numix
-    - include: ppa-install.yml
-      vars:
-        name: Numix({{ item }})
-        pkg_name: "{{ item }}"
-        repo: ppa:numix/ppa
-      loop:
-        - numix-gtk-theme
-        - numix-icon-theme-circle
-
-    - name: Set Numix for gtk
-      dconf:
-        key: "/org/gnome/desktop/interface/gtk-theme"
-        value: "'Numix'"
-      become_user: "{{ ansible_env.SUDO_USER }}"
-
-    - name: Set Numix for theme
-      dconf:
-        key: "/org/gnome/desktop/wm/preferences/theme"
-        value: "'Numix'"
-      become_user: "{{ ansible_env.SUDO_USER }}"
-
-    - name: Set Numix Circle for icon
-      dconf:
-        key: "/org/gnome/desktop/interface/icon-theme"
-        value: "'Numix-Circle'"
-      become_user: "{{ ansible_env.SUDO_USER }}"
-
     # Terminal: Bash(GNOME Terminal)
     - name: Disable XON/XOFF for i-search forward
       lineinfile:
         path: ~/.bashrc
         line: stty -ixon
         create: yes
-
-    - name: Set GNOME Terminal theme
-      dconf:
-        key: "/org/gnome/terminal/legacy/theme-variant"
-        value: "'dark'"
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     # Editor: Visual Studio Code
     - include: ppa-install.yml
@@ -260,20 +226,10 @@
       apt:
         name: curl
 
-    # Node
-    - name: Install nvm
-      shell: >
-        wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-      args:
-        creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
-      become_user: "{{ ansible_env.SUDO_USER }}"
-
-    # Go
-    - include: ppa-install.yml
-      vars:
-        name: Go
-        pkg_name: golang-go
-        repo: ppa:longsleep/golang-backports
+    # Golang
+    - name: Install Golang
+      apt:
+        name: golang
 
     - name: Add go workspace's bin directory to global PATH
       lineinfile:
@@ -281,3 +237,12 @@
         line: export PATH=$PATH:$(go env GOPATH)/bin
         create: yes
     #TODO: go bash auto completion
+
+    # JavaScript
+    - name: Install Node.js
+      apt:
+        name: nodejs
+
+    - name: Install npm
+      apt:
+        name: npm
