@@ -150,6 +150,11 @@
         key: "/org/gnome/desktop/input-sources/sources"
         value: "[('xkb', 'us'), ('ibus', 'hangul'), ('ibus', 'anthy')]"
 
+    - name: ibus의 unicode hotkey를 해제 # Ctrl+Shift+E가 기본으로 할당되어 있다
+      dconf:
+        key: "/desktop/ibus/panel/emoji/unicode-hotkey"
+        value: "@as []"
+
     - name: ibus-hangul의 처음입력모드를 한글로 설정
       dconf:
         key: "/org/freedesktop/ibus/engine/hangul/initial-input-mode"
