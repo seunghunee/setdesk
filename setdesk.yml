@@ -150,9 +150,9 @@
         key: "/org/gnome/desktop/input-sources/sources"
         value: "[('xkb', 'us'), ('ibus', 'hangul'), ('ibus', 'anthy')]"
 
-    - name: Set initial hangul input mode
+    - name: ibus-hangul의 처음입력모드를 한글로 설정
       dconf:
-        key: "/desktop/ibus/engine/hangul/initial-input-mode"
+        key: "/org/freedesktop/ibus/engine/hangul/initial-input-mode"
         value: "'hangul'"
 
     # Terminal: Bash(GNOME Terminal)
