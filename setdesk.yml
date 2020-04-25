@@ -48,6 +48,11 @@
         name: python3-psutil
       become: yes
 
+    - name: 윈도우 색을 dark로 설정
+      dconf:
+        key: "/org/gnome/desktop/interface/gtk-theme"
+        value: "'Yaru-dark'"
+
     - name: No blank screen
       dconf:
         key: "/org/gnome/desktop/session/idle-delay"
