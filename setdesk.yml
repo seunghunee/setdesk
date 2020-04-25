@@ -1,7 +1,6 @@
 ---
 - hosts: localhost
   connection: local
-  become: yes
   tasks:
     #TODO: startup script
 
@@ -12,12 +11,14 @@
         name: fs.inotify.max_user_watches
         value: 524288
         reload: yes
+      become: yes
 
     ## Package manager: apt
     - name: Keep all softwares up to date
       apt:
         update_cache: yes
         upgrade: full
+      become: yes
 
     - name: Remove unnecessary programs
       apt:
@@ -28,45 +29,45 @@
         - firefox
         - evince
         - gedit
+      become: yes
 
     - name: Remove useless packages from the cache
       apt:
         autoclean: yes
+      become: yes
 
     - name: Remove dependencies that are no longer required
       apt:
         autoremove: yes
         purge: yes
+      become: yes
 
     ## Desktop environment: GNOME
     - name: Install python3-psutil (python3) # For dconf module
       apt:
         name: python3-psutil
+      become: yes
 
     - name: No blank screen
       dconf:
         key: "/org/gnome/desktop/session/idle-delay"
         value: uint32 0
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     - name: Auto-hide the Dock
       dconf:
         key: "/org/gnome/shell/extensions/dash-to-dock/dock-fixed"
         value: "false"
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     - name: Remove appliction icons from dock
       dconf:
         key: "/org/gnome/shell/favorite-apps"
         value: "['']"
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     ### Home directory
     - name: Remove personal special folders
       file:
         path: ~/{{ item }}
         state: absent
-      become_user: "{{ ansible_env.SUDO_USER }}"
       loop:
         - Documents
         - Downloads
@@ -80,73 +81,65 @@
       copy:
         src: configs/user-dirs.conf
         dest: ~/.config/user-dirs.conf
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     ### Key bindings
     - name: Map caps lock to ctrl
       dconf:
         key: "/org/gnome/desktop/input-sources/xkb-options"
         value: "['ctrl:nocaps']"
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     - name: Unbind [Ctrl + Alt + Left]
       dconf:
         key: "/org/gnome/desktop/wm/keybindings/switch-to-workspace-left"
         value: "['']"
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     - name: Unbind [Ctrl + Alt + Right]
       dconf:
         key: "/org/gnome/desktop/wm/keybindings/switch-to-workspace-right"
         value: "['']"
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     - name: Unbind [Ctrl + Shift + Alt + up] from move-to-workspace-up
       dconf:
         key: "/org/gnome/desktop/wm/keybindings/move-to-workspace-up"
         value: "['<Super><Shift>Page_Up']"
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     - name: Unbind [Ctrl + Shift + Alt + down] from move-to-workspace-down
       dconf:
         key: "/org/gnome/desktop/wm/keybindings/move-to-workspace-down"
         value: "['<Super><Shift>Page_Down']"
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     - name: Unbind [Alt + Tab] from switch-applications
       dconf:
         key: "/org/gnome/desktop/wm/keybindings/switch-applications"
         value: "['<Super>Tab']"
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     - name: Bind [Alt + Tab] to switch-windows
       dconf:
         key: "/org/gnome/desktop/wm/keybindings/switch-windows"
         value: "['<Alt>Tab']"
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     - name: Unbind [Alt + Shift + Tab] from switch-applications-backward
       dconf:
         key: "/org/gnome/desktop/wm/keybindings/switch-applications-backward"
         value: "['<Shift><Super>Tab']"
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     - name: Bind [Alt + Shift + Tab] to switch-windows-backward
       dconf:
         key: "/org/gnome/desktop/wm/keybindings/switch-windows-backward"
         value: "['<Shift><Alt>Tab']"
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     ### Input framework: Ibus
     - name: Install ibus hangul (Korean)
       apt:
         name: ibus-hangul
       register: ibus_hangul
+      become: yes
 
     - name: Install ibus anthy (Japanese)
       apt:
         name: ibus-anthy
       register: ibus_anthy
+      become: yes
 
     - name: Restart ibus daemon
       shell: ibus restart
@@ -156,13 +149,11 @@
       dconf:
         key: "/org/gnome/desktop/input-sources/sources"
         value: "[('xkb', 'us'), ('ibus', 'hangul'), ('ibus', 'anthy')]"
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     - name: Set initial hangul input mode
       dconf:
         key: "/desktop/ibus/engine/hangul/initial-input-mode"
         value: "'hangul'"
-      become_user: "{{ ansible_env.SUDO_USER }}"
 
     # Terminal: Bash(GNOME Terminal)
     - name: Disable XON/XOFF for i-search forward
@@ -178,6 +169,7 @@
         pkg_name: code
         repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
         key_url: https://packages.microsoft.com/keys/microsoft.asc
+      become: yes
 
     - name: Set Visual Studio Code as default editor
       lineinfile:
@@ -190,7 +182,6 @@
         code --list-extensions | grep -q Shan.code-settings-sync
         && echo -n OK
         || code --install-extension shan.code-settings-sync
-      become_user: "{{ ansible_env.SUDO_USER }}"
       register: result
       changed_when: result.stdout != 'OK'
 
@@ -198,6 +189,7 @@
     - name: Install Git
       apt:
         name: git
+      become: yes
 
     - name: Configure Git
       git_config:
@@ -220,16 +212,19 @@
         pkg_name: google-chrome-stable
         repo: deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
         key_url: https://dl.google.com/linux/linux_signing_key.pub
+      become: yes
 
     # Tools
     - name: Install curl
       apt:
         name: curl
+      become: yes
 
     # Golang
     - name: Install Golang
       apt:
         name: golang
+      become: yes
 
     - name: Add go workspace's bin directory to global PATH
       lineinfile:
@@ -242,7 +237,9 @@
     - name: Install Node.js
       apt:
         name: nodejs
+      become: yes
 
     - name: Install npm
       apt:
         name: npm
+      become: yes

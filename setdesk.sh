@@ -9,4 +9,4 @@ if ! type ansible &> /dev/null; then
     apt install ansible -y
 fi
 
-ansible-playbook $(dirname $0)/setdesk.yml
+sudo -u $(logname) ansible-playbook $(dirname $0)/setdesk.yml
