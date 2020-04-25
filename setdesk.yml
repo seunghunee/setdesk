@@ -155,6 +155,11 @@
         key: "/org/freedesktop/ibus/engine/hangul/initial-input-mode"
         value: "'hangul'"
 
+    - name: ibus-anthy의 처음입력모드를 히라가나로 설정
+      dconf:
+        key: "/org/freedesktop/ibus/engine/anthy/common/input-mode"
+        value: "0"
+
     # Terminal: Bash(GNOME Terminal)
     - name: Disable XON/XOFF for i-search forward
       lineinfile:
