@@ -133,6 +133,11 @@
         key: "/org/gnome/desktop/wm/keybindings/switch-windows-backward"
         value: "['<Shift><Alt>Tab']"
 
+    - name: Unbind [Alt + F8]
+      dconf:
+        key: "/org/gnome/desktop/wm/keybindings/begin-resize"
+        value: "['']"
+
     ### Input framework: Ibus
     - name: Install ibus hangul (Korean)
       apt:
