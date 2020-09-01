@@ -197,14 +197,6 @@
         line: export EDITOR="code -w"
         create: yes
 
-    - name: Install vscode sync extension
-      shell: >
-        code --list-extensions | grep -q Shan.code-settings-sync
-        && echo -n OK
-        || code --install-extension shan.code-settings-sync
-      register: result
-      changed_when: result.stdout != 'OK'
-
     # Version Control system: Git
     - name: Install Git
       apt:
