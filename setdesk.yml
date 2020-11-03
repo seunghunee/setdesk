@@ -48,7 +48,7 @@
         name: python3-psutil
       become: yes
 
-    - name: 윈도우 색을 dark로 설정
+    - name: Enable dark theme
       dconf:
         key: "/org/gnome/desktop/interface/gtk-theme"
         value: "'Yaru-dark'"
@@ -160,17 +160,17 @@
         key: "/org/gnome/desktop/input-sources/sources"
         value: "[('xkb', 'us'), ('ibus', 'hangul'), ('ibus', 'anthy')]"
 
-    - name: ibus의 unicode hotkey를 해제 # Ctrl+Shift+E가 기본으로 할당되어 있다
+    - name: Disable ibus's unicode hotkey # Ctrl+Shift+E가 기본으로 할당되어 있다
       dconf:
         key: "/desktop/ibus/panel/emoji/unicode-hotkey"
         value: "@as []"
 
-    - name: ibus-hangul의 처음입력모드를 한글로 설정
+    - name: Set ibus-hangul's initial input mode to hangul
       dconf:
         key: "/org/freedesktop/ibus/engine/hangul/initial-input-mode"
         value: "'hangul'"
 
-    - name: ibus-anthy의 처음입력모드를 히라가나로 설정
+    - name: Set ibus-anthy's initial input mode to hiragana
       dconf:
         key: "/org/freedesktop/ibus/engine/anthy/common/input-mode"
         value: "0"
