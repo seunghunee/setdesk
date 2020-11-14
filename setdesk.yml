@@ -232,6 +232,13 @@
         name: curl
       become: yes
 
+    # Rust
+    - name: Install rustup
+      shell: >
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+      args:
+        creates: "{{ ansible_env.HOME }}/.rustup"
+
     # Golang
     - name: Install Golang
       apt:
