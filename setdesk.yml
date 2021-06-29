@@ -160,7 +160,12 @@
         key: "/org/gnome/desktop/input-sources/sources"
         value: "[('xkb', 'us'), ('ibus', 'hangul'), ('ibus', 'anthy')]"
 
-    - name: Disable ibus's unicode hotkey # Ctrl+Shift+E가 기본으로 할당되어 있다
+    - name: Disable ibus's hotkey # Ctrl+Shift+E가 기본으로 할당되어 있다
+      dconf:
+        key: "/desktop/ibus/panel/emoji/hotkey"
+        value: "@as []"
+
+    - name: Disable ibus's unicode hotkey # Ctrl+Shift+U가 기본으로 할당되어 있다
       dconf:
         key: "/desktop/ibus/panel/emoji/unicode-hotkey"
         value: "@as []"
