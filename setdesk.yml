@@ -2,8 +2,6 @@
 - hosts: localhost
   connection: local
   tasks:
-    #TODO: startup script
-
     # OS: Ubuntu
     ## Linux Kernel
     - name: set inotify watchers's maximum limit
@@ -68,25 +66,6 @@
         key: "/org/gnome/shell/favorite-apps"
         value: "['']"
 
-    ### Home directory
-    - name: Remove personal special folders
-      file:
-        path: ~/{{ item }}
-        state: absent
-      loop:
-        - Documents
-        - Downloads
-        - Music
-        - Pictures
-        - Public
-        - Templates
-        - Videos
-
-    - name: Disable the automatic special folder creation
-      copy:
-        src: configs/user-dirs.conf
-        dest: ~/.config/user-dirs.conf
-
     ### Key bindings
     - name: Map caps lock to ctrl
       dconf:
@@ -96,12 +75,12 @@
     - name: Unbind [Ctrl + Alt + Left]
       dconf:
         key: "/org/gnome/desktop/wm/keybindings/switch-to-workspace-left"
-        value: "['']"
+        value: "['<Super>Page_Up']"
 
     - name: Unbind [Ctrl + Alt + Right]
       dconf:
         key: "/org/gnome/desktop/wm/keybindings/switch-to-workspace-right"
-        value: "['']"
+        value: "['<Super>Page_Down']"
 
     - name: Unbind [Ctrl + Shift + Alt + up] from move-to-workspace-up
       dconf:
