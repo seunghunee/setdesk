@@ -167,7 +167,7 @@
         create: yes
 
     # Editor: Visual Studio Code
-    - include: ppa-install.yml
+    - import_tasks: ppa-install.yml
       vars:
         name: Visual Studio Code
         pkg_name: code
@@ -202,7 +202,7 @@
           }
 
     # Web browser: Google Chrome
-    - include: ppa-install.yml
+    - import_tasks: ppa-install.yml
       vars:
         name: Google Chrome
         pkg_name: google-chrome-stable
