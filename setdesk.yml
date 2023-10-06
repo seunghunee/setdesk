@@ -3,6 +3,14 @@
   connection: local
   tasks:
     # OS: Ubuntu
+    ## Laptop
+    - name: make Ubuntu not go in suspend when laptop lid is closed
+      replace:
+        path: /etc/systemd/logind.conf
+        regexp: '#HandleLidSwitch(.*)=(.*)'
+        replace: '#HandleLidSwitch\1=ignore'
+      become: yes
+
     ## Linux Kernel
     - name: set inotify watchers's maximum limit
       sysctl:
