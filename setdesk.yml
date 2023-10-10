@@ -59,11 +59,6 @@
         key: "/org/gnome/desktop/interface/gtk-theme"
         value: "'Yaru-dark'"
 
-    - name: No blank screen
-      dconf:
-        key: "/org/gnome/desktop/session/idle-delay"
-        value: uint32 0
-
     - name: Auto-hide the Dock
       dconf:
         key: "/org/gnome/shell/extensions/dash-to-dock/dock-fixed"
