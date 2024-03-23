@@ -223,6 +223,13 @@
         name: docker.io
       become: yes
 
+    - name: Install ascii
+      copy:
+        src: "{{ playbook_dir }}/ascii.py"
+        dest: /usr/local/bin/ascii
+        mode: '+x'
+      become: yes
+
     # Rust
     - name: Install rustup
       shell: >
