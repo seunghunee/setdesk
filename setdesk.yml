@@ -246,6 +246,12 @@
     #TODO: go bash auto completion
 
     # JavaScript
-    - name: Install volta
+    - name: Check if Volta is installed
+      stat:
+        path: ~/.volta
+      register: volta_installed
+
+    - name: Install Volta
       shell: >
         curl https://get.volta.sh | bash
+      when: not volta_installed.stat.exists
