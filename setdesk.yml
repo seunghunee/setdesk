@@ -55,8 +55,8 @@
 
     - name: Enable dark theme
       dconf:
-        key: "/org/gnome/desktop/interface/gtk-theme"
-        value: "'Yaru-dark'"
+        key: "/org/gnome/desktop/interface/color-scheme"
+        value: "'prefer-dark'"
 
     - name: Auto-hide the Dock
       dconf:
