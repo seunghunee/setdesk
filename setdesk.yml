@@ -197,6 +197,7 @@
             name: difftool.vscode.cmd,
             value: code --wait --diff $LOCAL $REMOTE,
           }
+        - { name: help.autocorrect, value: prompt }
 
     # Web browser: Google Chrome
     - import_tasks: ppa-install.yml
