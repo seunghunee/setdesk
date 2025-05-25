@@ -219,6 +219,11 @@
         name: docker.io
       become: yes
 
+    - name: Install mold
+      apt:
+        name: mold
+      become: yes
+
     - name: Install ascii
       copy:
         src: "{{ playbook_dir }}/ascii.py"
@@ -232,6 +237,14 @@
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
       args:
         creates: "{{ ansible_env.HOME }}/.rustup"
+
+    - name: Add mold as the default linker for Rust
+      blockinfile:
+        path: ~/.cargo/config.toml
+        create: true
+        block: |
+          [target.'cfg(target_os = "linux")']
+          rustflags = ["-C", "link-arg=-fuse-ld=mold"]
 
     # Golang
     - name: Install Golang
