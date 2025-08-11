@@ -208,10 +208,16 @@
         key_url: https://dl.google.com/linux/linux_signing_key.pub
       become: yes
 
-    # Tools: curl, Docker
+    # Tools
     - name: Install curl
       apt:
         name: curl
+      become: yes
+
+    - name: Install kubectl
+      snap:
+        name: kubectl
+        classic: true
       become: yes
 
     - name: Install Docker
