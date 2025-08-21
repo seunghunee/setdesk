@@ -220,6 +220,10 @@
         classic: true
       become: yes
 
+    - name: Enable kubectl command completion
+      shell: >
+        echo "source <(kubectl completion bash)" >> ~/.bashrc
+
     - name: Install Docker
       apt:
         name: docker.io
